@@ -4,8 +4,8 @@
         "es2021": true
     },
     "extends": [
-        "prettier",
-        "airbnb-base"
+        "airbnb-base",
+        "prettier"
     ],
     "parserOptions": {
         "ecmaVersion": 12,

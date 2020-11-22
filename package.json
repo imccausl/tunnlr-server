@@ -1,0 +1,10 @@
+{
+  "name": "tunnlr",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "koa": "^2.13.0"
+  }
+}

@@ -3,7 +3,7 @@ import net from 'net'
 import { EventEmitter } from 'events'
 
 const MAX_CONNECTIONS = 10
-
+const LOCAL_TUNNEL_PORT = process.env.PORT || 3000
 class Tunnel extends EventEmitter {
   constructor(options) {
     super(options)
@@ -64,7 +64,7 @@ class Tunnel extends EventEmitter {
         console.log('Local connection error: ', err)
         localConnection.end()
 
-        if (err.code === 'ECONNREFUSED') {
+        if (err.code !== 'ECONNREFUSED') {
           return remoteConnection.end()
         }
 
@@ -93,7 +93,7 @@ for (let i = 0; i < MAX_CONNECTIONS; i += 1) {
     tunnelServerHost: 'localhost',
     tunnelServerPort: 7777,
     localHost: 'localhost',
-    localPort: 6006,
+    localPort: LOCAL_TUNNEL_PORT,
   })
   tunnel.open()
 }

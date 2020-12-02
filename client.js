@@ -2,22 +2,43 @@
 import net from 'net'
 import { EventEmitter } from 'events'
 
+import fetch from 'node-fetch'
+import { createBrotliCompress } from 'zlib'
+
 const MAX_CONNECTIONS = 10
 const LOCAL_TUNNEL_PORT = process.env.PORT || 3000
+const TUNNEL_SERVER_HOSTNAME = 'localhost'
+const TUNNEL_SERVER_PORT = 8080
+const API_NEW_CLIENT = '?new'
+
 class Tunnel extends EventEmitter {
   constructor(options) {
     super(options)
 
     this.tunnelServerHost = options.tunnelServerHost
-    this.tunnelServerPort = options.tunnelServerPort
     this.localHost = options.localHost
     this.localPort = options.localPort
   }
 
-  open() {
+  async _init() {
+    const response = await fetch(
+      `http://${TUNNEL_SERVER_HOSTNAME}:${TUNNEL_SERVER_PORT}/${API_NEW_CLIENT}`,
+    )
+    const body = await response.json()
+    console.log(body)
+
+    this.tunnelSeverPort = body.port
+    this.clientId = body.clientId
+
+    return body.port
+  }
+
+  async open() {
+    const port = await this._init()
+
     const remoteConnection = net.connect({
       host: this.tunnelServerHost,
-      port: this.tunnelServerPort,
+      port,
     })
 
     remoteConnection.setKeepAlive(true)
@@ -88,12 +109,13 @@ class Tunnel extends EventEmitter {
   }
 }
 
-for (let i = 0; i < MAX_CONNECTIONS; i += 1) {
+//for (let i = 0; i < MAX_CONNECTIONS; i += 1) {
+;(async () => {
   const tunnel = new Tunnel({
     tunnelServerHost: 'localhost',
-    tunnelServerPort: 7777,
     localHost: 'localhost',
     localPort: LOCAL_TUNNEL_PORT,
   })
-  tunnel.open()
-}
+  await tunnel.open()
+})()
+//}

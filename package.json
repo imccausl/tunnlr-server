@@ -2,10 +2,17 @@
   "name": "tunnlr",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "module",
   "license": "MIT",
   "dependencies": {
+    "@koa/router": "^10.0.0",
+    "debug": "^4.3.1",
     "dotenv": "^8.2.0",
-    "koa": "^2.13.0"
+    "koa": "^2.13.0",
+    "koa-logger": "^3.2.1",
+    "nanoid": "^3.1.18",
+    "node-fetch": "^2.6.1",
+    "tldjs": "^2.3.1"
   },
   "devDependencies": {
     "eslint": "^7.14.0",
